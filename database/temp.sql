@@ -15,7 +15,7 @@ select * from books;
 drop table if  exists books_copies;
 create table books_copies (
   ISBN VARCHAR(25) not null UNIQUE,
-  Serial_No NUMERIC(5) not null UNIQUE,
+  Title varchar(100) Not Null,
   Is_Available NUMERIC(1)
 );
 

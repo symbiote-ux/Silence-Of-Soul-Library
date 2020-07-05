@@ -16,7 +16,8 @@ class Library {
     return new Promise((resolve, reject) => {
       const isbn = bookInfo[0];
       const isAvailable = 1;
-      const values = [isbn, isAvailable];
+      const title = bookInfo[1];
+      const values = [isbn, title, isAvailable];
       resolve(
         this.db.insertInTable('book_copies', values),
         this.db.insertInTable('books', bookInfo)
@@ -50,6 +51,16 @@ class Library {
         this.db.removeBook('books', args),
         this.db.removeBook('book_copies', args)
       );
+    });
+  }
+  borrowBook(args) {
+    return new Promise((resolve, reject) => {
+      resolve(this.db.borrowBook(args));
+    });
+  }
+  returnBook(args) {
+    return new Promise((resolve, reject) => {
+      resolve(this.db.returnBook(args));
     });
   }
 }

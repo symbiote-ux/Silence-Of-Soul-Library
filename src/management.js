@@ -55,6 +55,28 @@ const start = function (library) {
         callback();
       });
   });
+  vorpal.command('borrowBook [attr...]').action(function (args, callback) {
+    library
+      .borrowBook(args.attr)
+      .then(() => {
+        callback();
+      })
+      .catch((msg) => {
+        this.log(msg);
+        callback();
+      });
+  });
+  vorpal.command('returnBook [attr]').action(function (args, callback) {
+    library
+      .returnBook(args.attr)
+      .then(() => {
+        callback();
+      })
+      .catch((msg) => {
+        this.log(msg);
+        callback();
+      });
+  });
   vorpal.delimiter('Silence Of Soul Library $').show();
 };
 
