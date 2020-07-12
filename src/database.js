@@ -1,11 +1,11 @@
 const getUpdateLogQuery = (args, state) =>
   `update library_log set State = '${state}',Return_Time = '${new Date().toLocaleString()}' where ISBN = '${args}';`;
-
 const getUpdateBookCopiesQuery = (
   args,
   operation
 ) => `update book_copies set Available =
 (Select sum(Available) from book_copies where ISBN = '${args}')  ${operation} 1 where ISBN = '${args}';`;
+
 
 class Database {
   constructor(sql) {
@@ -54,4 +54,5 @@ class Database {
     await this.sql.runQuery(query);
   }
 }
+
 module.exports = { Database };

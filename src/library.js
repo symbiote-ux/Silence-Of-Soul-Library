@@ -32,7 +32,6 @@ class Library {
   async borrow_book(args) {
     await this.db.borrowBook(args);
   }
-
   async return_book(args) {
     await this.db.returnBook(args);
   }

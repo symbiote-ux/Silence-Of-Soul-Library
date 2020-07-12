@@ -38,5 +38,4 @@ class Sql {
     });
   }
 }
-
 module.exports = { Sql };
