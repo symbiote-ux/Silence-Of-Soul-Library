@@ -8,6 +8,7 @@ module.exports = {
   `,
   schema2: `
     create table if not exists book_copies (
+    Serial_Number NOT NULL
     ISBN varchar(25) NOT NULL UNIQUE,
     Title varchar(100) NOT NULL,
     Total_Copies NUMERIC[5],
