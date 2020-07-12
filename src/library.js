@@ -1,68 +1,40 @@
-const { Database } = require('./database');
-const { schema1, schema2, schema3 } = require('./schema');
-
 class Library {
-  constructor(path) {
-    this.db = new Database(path);
+  constructor(db) {
+    this.db = db;
   }
-  static init(path) {
-    const library = new Library(path);
-    library.db.createTable(schema1);
-    library.db.createTable(schema2);
-    library.db.createTable(schema3);
-    return library;
+  async addBook(data) {
+    const { ISBN, Title, Author, Category, num_of_copy } = data;
+    const values = [ISBN, Title, num_of_copy, num_of_copy];
+    const bookInfo = [ISBN, Title, Category, Author];
+    await this.db.insertInTable('book_copies', values);
+    await this.db.insertInTable('books', bookInfo);
   }
-  addBook(bookInfo) {
-    return new Promise((resolve, reject) => {
-      const isbn = bookInfo[0];
-      const isAvailable = 1;
-      const title = bookInfo[1];
-      const values = [isbn, title, isAvailable];
-      resolve(
-        this.db.insertInTable('book_copies', values),
-        this.db.insertInTable('books', bookInfo)
-      );
-    });
+  async show({ table }) {
+    try {
+      const result = await this.db.selectAll(table);
+      return result;
+    } catch (err) {}
   }
-  show({ table }) {
-    return new Promise((resolve, reject) =>
-      this.db.selectAll(table, (err, rows) => {
-        if (!err) resolve(rows);
-      })
-    );
+  async search(args) {
+    try {
+      return await this.db.searchBy('Books', args);
+    } catch (err) {}
   }
-  search(args) {
-    return new Promise((resolve, reject) => {
-      this.db.searchBy(args, (err, rows) => {
-        if (!err) resolve(rows);
-      });
-    });
+  async showAvailable() {
+    try {
+      return await this.db.showAvailable();
+    } catch (err) {}
   }
-  showAvailable() {
-    return new Promise((resolve, reject) => {
-      this.db.showAvailable((err, rows) => {
-        if (!err) resolve(rows);
-      });
-    });
+  async removeBook(args) {
+    await this.db.removeBook('books', args);
+    await this.db.removeBook('book_copies', args);
   }
-  removeBook(args) {
-    return new Promise((resolve, reject) => {
-      resolve(
-        this.db.removeBook('books', args),
-        this.db.removeBook('book_copies', args)
-      );
-    });
+  async borrow_book(args) {
+    await this.db.borrowBook(args);
   }
-  borrowBook(args) {
-    return new Promise((resolve, reject) => {
-      resolve(this.db.borrowBook(args));
-    });
-  }
-  returnBook(args) {
-    return new Promise((resolve, reject) => {
-      resolve(this.db.returnBook(args));
-    });
+
+  async return_book(args) {
+    await this.db.returnBook(args);
   }
 }
-
 module.exports = { Library };
