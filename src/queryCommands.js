@@ -1,6 +1,14 @@
 const vorpal = require('vorpal')();
 const { bookDetails, borrowerDetails } = require('./prompt');
 
+const displayTable = (rows, msg) => {
+  if (rows.length == 0) {
+    console.log(msg);
+    return;
+  }
+  console.table(rows);
+};
+
 const start = function (library) {
   vorpal.command('addBook').action(async function (argument, callback) {
     const result = await this.prompt(bookDetails);
@@ -13,7 +21,7 @@ const start = function (library) {
     .action(async function (args, callback) {
       try {
         const rows = await library.show(args);
-        console.table(rows);
+        displayTable(rows, 'Table is empty');
         callback();
       } catch (msg) {
         this.log(msg);
@@ -26,7 +34,7 @@ const start = function (library) {
     .action(async function (args, callback) {
       try {
         const rows = await library.search(args.attr);
-        console.table(rows);
+        displayTable(rows, 'Not found');
         callback();
       } catch (msg) {
         this.log(msg);
@@ -36,7 +44,7 @@ const start = function (library) {
   vorpal.command('showAvailable').action(async function (args, callback) {
     try {
       const rows = await library.showAvailable();
-      console.table(rows);
+      displayTable(rows, 'No book available');
       callback();
     } catch (err) {
       this.log(msg);
@@ -57,15 +65,17 @@ const start = function (library) {
     await library.borrow_book(result);
     callback();
   });
-  vorpal.command('return_book <ISBN>').action(async function (args, callback) {
-    try {
-      await library.return_book(args.ISBN);
-      callback();
-    } catch (err) {
-      this.log(err);
-      callback();
-    }
-  });
+  vorpal
+    .command('return_book <serial_num>')
+    .action(async function (args, callback) {
+      try {
+        await library.return_book(args.serial_num);
+        callback();
+      } catch (err) {
+        this.log(err);
+        callback();
+      }
+    });
   vorpal.delimiter('Silence Of Soul Library $').show();
 };
 module.exports = { start };

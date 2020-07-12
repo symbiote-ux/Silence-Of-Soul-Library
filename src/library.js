@@ -4,9 +4,11 @@ class Library {
   }
   async addBook(data) {
     const { ISBN, Title, Author, Category, num_of_copy } = data;
-    const values = [ISBN, Title, num_of_copy, num_of_copy];
+    const values = [ISBN, 1, Title];
+    for (let i = 0; i < num_of_copy; i++) {
+      await this.db.insertInCopies('book_copies', values);
+    }
     const bookInfo = [ISBN, Title, Category, Author];
-    await this.db.insertInTable('book_copies', values);
     await this.db.insertInTable('books', bookInfo);
   }
   async show({ table }) {
@@ -32,6 +34,7 @@ class Library {
   async borrow_book(args) {
     await this.db.borrowBook(args);
   }
+
   async return_book(args) {
     await this.db.returnBook(args);
   }

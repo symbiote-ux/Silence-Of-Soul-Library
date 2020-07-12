@@ -29,8 +29,14 @@ module.exports = {
   borrowerDetails: [
     {
       type: 'input',
+      name: 'Serial_Num',
+      message: 'Enter Serial Number :',
+    },
+
+    {
+      type: 'input',
       name: 'ISBN',
-      message: 'Enter ISBN:',
+      message: 'Enter ISBN :',
     },
     {
       type: 'input',
